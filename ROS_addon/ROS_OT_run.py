@@ -4,7 +4,7 @@ import bpy
 from functools import partial
 
 from ROS_addon.external.geometry_msgs.msg import Point, Quaternion, Pose
-from ROS_addon.external.sensor_msgs.msg import Image
+from ROS_addon.external.sensor_msgs.msg import Image, CompressedImage
 from ROS_addon.external.std_msgs.msg import Int64, Float64
 from ROS_addon.external.cv_bridge import CvBridge
 
@@ -64,11 +64,13 @@ class ROS_OT_run(bpy.types.Operator):
                 context.scene.ros_run_bool = False
                 self.report({'WARNING'}, "Couldn't start, roscore is not running")
             if rospy.client.rosgraph.is_master_online() == True:
+                self.report({'INFO'}, "CONNECTED!")
                 context.scene.ros_run_bool = True
                 rospy.init_node(context.scene.node_name, anonymous=context.scene.anonymous_node_bool)
 
                 if context.scene.ros_video_out_bool==True and context.scene.camera.topic != '':
-                    self.cam_pub = rospy.Publisher(context.scene.camera.topic, Image, queue_size=10)
+                    # self.cam_pub = rospy.Publisher(context.scene.camera.topic, Image, queue_size=10)
+                    self.cam_pub = rospy.Publisher(context.scene.camera.topic, CompressedImage, queue_size=10)
 
                 for object in bpy.data.objects:
                     if object.mode_type == 'subscriber' and object.topic != '':

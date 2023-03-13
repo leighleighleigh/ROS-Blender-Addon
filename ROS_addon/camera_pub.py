@@ -14,4 +14,5 @@ def camera_pub(self, context):
 
     if context.scene.ros_video_out_bool==True and context.scene.camera.topic!='':
         img = cv2.imread(save_path)
-        self.cam_pub.publish(self.bridge.cv2_to_imgmsg(img, encoding="passthrough"))
+        #self.cam_pub.publish(self.bridge.cv2_to_imgmsg(img, encoding="passthrough"))
+        self.cam_pub.publish(self.bridge.cv2_to_compressed_imgmsg(img, dst_format="jpg"))
